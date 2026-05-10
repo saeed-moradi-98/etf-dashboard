@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0c0a14;
+  --bg2: #110e1c;
+  --surface: #171224;
+  --surface2: #1e1830;
+  --border: #2a2245;
+  --border2: #3a3060;
+  --accent: #a78bfa;
+  --accent-dim: rgba(167, 139, 250, 0.12);
+  --accent2: #f472b6;
+  --accent3: #818cf8;
+  --text: #ede9fe;
+  --muted: #5b5080;
+  --muted2: #7c6fa0;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --radius: 12px;
+  --glow: 0 0 40px rgba(167, 139, 250, 0.08);
+}
+
+[data-theme="light"] {
+  --bg: #f5f3ff;
+  --bg2: #ede9fe;
+  --surface: #ffffff;
+  --surface2: #f5f3ff;
+  --border: #ddd6fe;
+  --border2: #c4b5fd;
+  --accent: #7c3aed;
+  --accent-dim: rgba(124, 58, 237, 0.1);
+  --accent2: #db2777;
+  --accent3: #4f46e5;
+  --text: #1e1b4b;
+  --muted: #a78bfa;
+  --muted2: #6d28d9;
+  --glow: 0 0 40px rgba(124, 58, 237, 0.06);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 15px;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(167,139,250,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(129,140,248,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root { min-height: 100vh; position: relative; z-index: 1; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.fade-up   { animation: fadeUp 0.5s ease both; }
+.fade-up-1 { animation: fadeUp 0.5s 0.1s ease both; }
+.fade-up-2 { animation: fadeUp 0.5s 0.2s ease both; }
+.fade-up-3 { animation: fadeUp 0.5s 0.3s ease both; }

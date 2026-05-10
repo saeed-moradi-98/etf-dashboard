@@ -1,0 +1,80 @@
+services:
+
+  db:
+    image: timescale/timescaledb:latest-pg15
+    container_name: etf_db
+    environment:
+      POSTGRES_USER: etfuser
+      POSTGRES_PASSWORD: etfpassword
+      POSTGRES_DB: etfdb
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etfuser -d etfdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - etf-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: etf_redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - etf-network
+
+  backend:
+    build: ./backend
+    container_name: etf_backend
+    restart: on-failure
+    environment:
+      DATABASE_URL: postgresql://etfuser:etfpassword@db:5432/etfdb
+      REDIS_URL: redis://redis:6379
+      APP_ENV: development
+      JWT_SECRET_KEY: "replace-with-a-long-random-secret-in-production"
+      ALLOWED_ORIGINS: "http://localhost,https://localhost"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend/data:/app/data
+    networks:
+      - etf-network
+
+  frontend:
+    build: ./frontend
+    container_name: etf_frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - backend
+    networks:
+      - etf-network
+
+networks:
+  etf-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+  redisdata:
