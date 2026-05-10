@@ -44,12 +44,12 @@ etf-dashboard/
 ```
 
 ## How to Run
-
+After moving to the app root directory, please run the following commands in order.
 ### Backend
 
 ```bash
 cd backend
-python -m venv venv
+python -m venv venv (or python3 -m venv venv)
 
 # Mac/Linux
 source venv/bin/activate
